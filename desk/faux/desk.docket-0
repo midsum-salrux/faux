@@ -1,0 +1,9 @@
+:~
+  title+'Faux'
+  info+'Discord bridge'
+  color+0x65.4321
+  version+[0 0 1]
+  website+''
+  license+'MIT'
+  site+/
+==
