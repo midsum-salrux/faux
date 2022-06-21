@@ -26,14 +26,13 @@
         (headers:faux-discord bot-token)
         ~
     ==
-  ~&  request
   ;<  ~  bind:m  (send-request request)
   ;<  =client-response:iris  bind:m  take-client-response
   ?>  ?=(%finished -.client-response)
-  ~&  response-header.client-response
-  =/  body
-    ?~  full-file.client-response  ''
+  =/  raw-body
+    ?~  full-file.client-response  !!
     q.data.u.full-file.client-response
-  ~&  body
-  (pure:m !>(~))
+  =/  json-body  (need (de-json:html raw-body))
+  =/  messages  (messages-from-json:faux-discord json-body)
+  (pure:m !>(messages))
 --
