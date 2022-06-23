@@ -1,6 +1,6 @@
 # Faux
 
-Faux is a chatbot bridge between urbit groups and discord.
+Faux is a bridge between urbit groups and discord.
 
 https://urbit.org/grants/faux
 
