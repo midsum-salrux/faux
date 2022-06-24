@@ -1,6 +1,7 @@
 /-  *post
 /-  *graph-store
 /+  default-agent, dbug
+/+  faux-discord
 |%
 +$  versioned-state
   $%  state-0
@@ -14,6 +15,18 @@
       [%bot-token bot-token=tape]
   ==
 +$  card  card:agent:gall
++$  sign  sign:agent:gall
+++  post-to-discord-card
+  |=  [discord-channel-id=tape bot-token=tape =post]
+  :*  %pass  /post-to-discord  %arvo  %k  %fard
+      %faux  %post-message  %noun
+      !>  :*
+        discord-channel-id
+        bot-token
+        (flatten-contents:faux-discord contents.post)
+        author.post
+      ==
+  ==
 --
 %-  agent:dbug
 =|  state-0
@@ -24,7 +37,9 @@
     def   ~(. (default-agent this %.n) bowl)
 ++  on-init
   ^-  (quip card _this)
-  `this
+  :_  this
+  :~  [%pass /graph/updates %agent [our:bowl %graph-store] %watch /updates]
+  ==
 ++  on-save
   ^-  vase
   !>  state
@@ -47,7 +62,47 @@
 ++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
 ++  on-peek   on-peek:def
-++  on-agent  on-agent:def
+++  on-agent
+  |=  [=wire =sign]
+  ^-  (quip card _this)
+  ?+  wire  (on-agent:def wire sign)
+      [%graph %updates ~]
+    ?+  -.sign  (on-agent:def wire sign)
+        %kick
+      :_  this
+      :~  [%pass /graph/updates %agent [our:bowl %graph-store] %watch /updates]
+      ==
+        %fact
+      ?+  p.cage.sign  (on-agent:def wire sign)
+          %graph-update-3
+        =/  =update  !<(update q:cage:sign)
+        =/  =action  q.update
+        ?+  -.action  (on-agent:def wire sign)
+            %add-nodes
+          =/  =resource  resource.action
+          =/  nodes=(list node)  ~(val by nodes.action)
+          =/  maybe-posts=(list maybe-post)
+            (turn nodes |=(=node post.node))
+          =/  channel-posts=(list [discord-id=tape =post])
+            %+  murn  maybe-posts
+            |=  =maybe-post
+            ?+  -.maybe-post  ~
+                %.y
+              =/  post  p.maybe-post
+              =/  matching-channels
+                %+  skim  channels
+                |=  =channel  =(resource:channel resource)
+              ?~  matching-channels  ~
+              `[discord-id.i.matching-channels post]
+            ==
+          :_  this
+          %+  turn  channel-posts
+          |=  [discord-id=tape =post]
+          (post-to-discord-card discord-id bot-token post)
+        ==
+      ==
+    ==
+  ==
 ++  on-arvo   on-arvo:def
 ++  on-fail   on-fail:def
 --

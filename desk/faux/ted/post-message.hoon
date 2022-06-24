@@ -6,21 +6,18 @@
 =,  strand=strand:spider
 =,  strand-fail=strand-fail:libstrand:spider
 |^  ted
-++  point-text
-  |=  point=@p
-  ~(rend co %$ %p point)
 ++  url
-  |=  channel=tape
+  |=  discord-channel-id=tape
   ;:  weld
     base-api-url:faux-discord
-    "channels/"  channel  "/messages"
+    "channels/"  discord-channel-id  "/messages"
   ==
 ++  body
   |=  [message=tape author=@p]
   ^-  json
   =/  full-text
     ;:  weld
-      (point-text author)  ": "
+      (point-text:faux-discord author)  ": "
       message
     ==
   (frond:enjs:format 'content' (tape:enjs:format full-text))
@@ -28,12 +25,11 @@
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  arguments  !<  (unit [tape tape tape @p])  arg
-  =/  [channel=tape bot-token=tape message=tape author=@p]
-    (need arguments)
+  =/  [discord-channel-id=tape bot-token=tape message=tape author=@p]
+    !<  [tape tape tape @p]  arg
   =/  =request:http
     :*  %'POST'
-        (crip (url channel))
+        (crip (url discord-channel-id))
         (headers:faux-discord bot-token)
         `(json-to-octs:server (body message author))
     ==
