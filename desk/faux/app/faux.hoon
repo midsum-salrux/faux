@@ -27,6 +27,15 @@
         author.post
       ==
   ==
+++  timer-card
+  |=  now=@da
+  [%pass /faux-timer %arvo %b [%wait (add ~s3 now)]]
+::
+::  sometimes behn gets stuck, so we send this no-op card
+::  to unstick it when we see an urbit message
+::
+++  huck-card
+  [%pass /faux-huck %arvo %b [%huck *sign-arvo]]
 --
 %-  agent:dbug
 =|  state-0
@@ -39,6 +48,7 @@
   ^-  (quip card _this)
   :_  this
   :~  [%pass /graph/updates %agent [our:bowl %graph-store] %watch /updates]
+      (timer-card now:bowl)
   ==
 ++  on-save
   ^-  vase
@@ -96,6 +106,7 @@
               `[discord-id.i.matching-channels post]
             ==
           :_  this
+          :-  huck-card
           %+  turn  channel-posts
           |=  [discord-id=tape =post]
           (post-to-discord-card discord-id bot-token post)
@@ -103,6 +114,14 @@
       ==
     ==
   ==
-++  on-arvo   on-arvo:def
+++  on-arvo
+  |=  [=wire =sign-arvo]
+  ^-  (quip card _this)
+    ?+  wire  (on-arvo:def wire sign-arvo)
+        [%faux-timer ~]
+      ~&  sign-arvo
+      ~&  now:bowl
+      [~[(timer-card now:bowl)] this]
+  ==
 ++  on-fail   on-fail:def
 --

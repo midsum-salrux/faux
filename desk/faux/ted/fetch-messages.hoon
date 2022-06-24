@@ -17,8 +17,9 @@
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  arguments  !<  (unit [tape tape tape])  arg
-  =/  [channel=tape bot-token=tape after=tape]
+  =/  [channel=tape bot-token=tape after=tape =resource]
+    !<  [tape tape tape resource]  arg
+  =/
     (need arguments)
   =/  =request:http
     :*  %'GET'
