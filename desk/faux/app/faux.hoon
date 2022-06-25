@@ -7,11 +7,12 @@
   $%  state-0
   ==
 +$  state-0
-  [%0 [channels=(list channel) bot-token=tape]]
+  [%0 [=channels bot-token=tape]]
 +$  channel
   [=resource discord-id=tape last-seen-message=(unit tape)]
++$  channels  (list channel)
 +$  state-update-poke
-  $%  [%channels channels=(list channel)]
+  $%  [%channels =channels]
       [%bot-token bot-token=tape]
   ==
 +$  card  card:agent:gall
@@ -36,6 +37,16 @@
 ::
 ++  huck-card
   [%pass /faux-huck %arvo %b [%huck *sign-arvo]]
+++  fetch-messages-cards
+  |=  [=bowl:gall =channels bot-token=tape]
+  ^-  (list card)
+  %+  turn  channels
+    |=  [=resource discord-id=tape last-seen-message=(unit tape)]
+    ^-  card
+    :*  %pass  /fetch-discord-messages  %arvo  %k  %fard
+        %faux  %fetch-messages  %noun
+        !>  [bowl discord-id bot-token last-seen-message resource]
+    ==
 --
 %-  agent:dbug
 =|  state-0
@@ -117,11 +128,14 @@
 ++  on-arvo
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
-    ?+  wire  (on-arvo:def wire sign-arvo)
-        [%faux-timer ~]
-      ~&  sign-arvo
-      ~&  now:bowl
-      [~[(timer-card now:bowl)] this]
+  ~&  [wire sign-arvo]
+  ?+  wire  (on-arvo:def wire sign-arvo)
+      [%faux-timer ~]
+    :_  this
+    :-  (timer-card now:bowl)
+    (fetch-messages-cards bowl channels bot-token)
+      [%fetch-discord-messages ~]
+    `this
   ==
 ++  on-fail   on-fail:def
 --

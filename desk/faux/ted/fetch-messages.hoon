@@ -3,24 +3,25 @@
 /+  *strandio
 /+  faux-discord
 /+  server
+/+  faux-reply
 =,  strand=strand:spider
 =,  strand-fail=strand-fail:libstrand:spider
 |^  ted
 ++  url
-  |=  [channel=tape after=tape]
+  |=  [channel=tape after=(unit tape)]
   ;:  weld
     base-api-url:faux-discord
     "channels/"  channel  "/messages"
-    "?after="  after
+    ?~  after
+      ""
+    (weld "?after=" (need after))
   ==
 ++  ted
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  [channel=tape bot-token=tape after=tape =resource]
-    !<  [tape tape tape resource]  arg
-  =/
-    (need arguments)
+  =/  [=bowl:gall channel=tape bot-token=tape after=(unit tape) =resource]
+    !<  [bowl:gall tape tape (unit tape) resource]  arg
   =/  =request:http
     :*  %'GET'
         (crip (url channel after))
@@ -35,5 +36,7 @@
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
   =/  messages  (messages-from-json:faux-discord json-body)
+  ?~  messages
+    (pure:m !>(~))
   (pure:m !>(messages))
 --
