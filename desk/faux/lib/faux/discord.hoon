@@ -13,10 +13,7 @@
       [key='User-Agent' value=user-agent]
       [key='Content-Type' value='application/json']
   ==
-++  messages-from-json
-  |=  =json
-  ^-  (list message)
-  =/  decoder
+++  messages-json-decoder
   %-  ar
   %-  ot
   :~  id+sa
@@ -24,16 +21,36 @@
       [%'channel_id' sa]
       author+(ou ~[username+(uf "" sa) bot+(uf %.n bo)])
   ==
-  =/  decoded  (decoder json)
-  %+  turn
-    (skip decoded |=(m=parsed-message bot.author.m))
-  |=  m=parsed-message
-  ^-  message
-  :*  id=id.m
-      content=content.m
-      channel=channel-id.m
-      author=username.author.m
-  ==
+++  messages-from-json
+  |=  =json
+  ^-  (list message)
+  =/  decoded  (messages-json-decoder json)
+  =/  messages=(list message)
+    %+  turn
+      (skip decoded |=(m=parsed-message bot.author.m))
+    |=  m=parsed-message
+    ^-  message
+    :*  id=id.m
+        content=content.m
+        channel=channel-id.m
+        author=username.author.m
+    ==
+  (sort messages message-sorter)
+++  message-sorter
+  |=  [left=message right=message]
+  ^-  ?
+  (compare-snowflakes id.left id.right)
+::  https://discord.com/developers/docs/reference#snowflakes
+::  the most significant bits of a discord message id are a timestamp
+++  compare-snowflakes
+  |=  [left=tape right=tape]
+  ^-  ?
+  |-
+  ?~  left   %.n
+  ?~  right  %.y
+  ?.  =(i.left i.right)
+    (lth i.left i.right)
+  $(left t.left, right t.right)
 ++  point-text
   |=  point=@p
   ^-  tape

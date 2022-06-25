@@ -33,7 +33,6 @@
         (headers:faux-discord bot-token)
         `(json-to-octs:server (body message author))
     ==
-  ~&  request
   ;<  ~  bind:m  (send-request request)
   ;<  =client-response:iris  bind:m  take-client-response
   ?>  ?=(%finished -.client-response)
@@ -41,6 +40,5 @@
   =/  body
     ?~  full-file.client-response  ''
     q.data.u.full-file.client-response
-  ~&  body
   (pure:m !>(~))
 --

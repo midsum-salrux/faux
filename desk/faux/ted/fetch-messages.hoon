@@ -3,7 +3,6 @@
 /+  *strandio
 /+  faux-discord
 /+  server
-/+  faux-reply
 =,  strand=strand:spider
 =,  strand-fail=strand-fail:libstrand:spider
 |^  ted
@@ -35,6 +34,7 @@
     ?~  full-file.client-response  !!
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
+  ~&  response-header.client-response
   =/  messages  (messages-from-json:faux-discord json-body)
   ?~  messages
     (pure:m !>(~))

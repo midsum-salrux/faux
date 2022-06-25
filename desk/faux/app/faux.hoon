@@ -31,7 +31,7 @@
   ==
 ++  timer-card
   |=  now=@da
-  [%pass /faux-timer %arvo %b [%wait (add ~s3 now)]]
+  [%pass /faux-timer %arvo %b [%wait (add ~s4 now)]]
 ::
 ::  sometimes behn gets stuck, so we send this no-op card
 ::  to unstick it when we see an urbit message
@@ -52,7 +52,9 @@
   |=  [=bowl:gall text=tape =resource index-number=@]
   =/  contents=(list content)  ~[[%text (crip text)]]
   =/  =post
-    (~(post create our.bowl now.bowl) ~[(add now.bowl index-number)] contents)
+    %+  ~(post create our.bowl now.bowl)
+      ~[(add now.bowl index-number)]
+    contents
   =/  mp  (maybe-post [%.y post])
   =/  data
     !>  :-  now.bowl
@@ -61,7 +63,7 @@
           ~[(add now.bowl index-number)]
         [post=mp children=*internal-graph]
   :*  %pass  /post-to-graph-from-discord  %agent
-      [our:bowl %graph-store]  %poke  %graph-update-3
+      [our:bowl %graph-push-hook]  %poke  %graph-update-3
       data
   ==
 ++  channel-by-discord-id
@@ -70,7 +72,6 @@
   %+  skim  channels
   |=  =channel
   =(discord-id.channel discord-id)
-  ~&  matching
   ::  there should always be a match since this runs per channel
   ?~  matching  !!
   i.matching
