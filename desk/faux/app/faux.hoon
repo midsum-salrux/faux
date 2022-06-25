@@ -1,5 +1,6 @@
 /-  *post
 /-  *graph-store
+/+  *graph-store
 /+  default-agent, dbug
 /+  faux-discord
 |%
@@ -47,6 +48,43 @@
         %faux  %fetch-messages  %noun
         !>  [bowl discord-id bot-token last-seen-message resource]
     ==
+++  graph-store-message-card
+  |=  [=bowl:gall text=tape =resource index-number=@]
+  =/  contents=(list content)  ~[[%text (crip text)]]
+  =/  =post
+    (~(post create our.bowl now.bowl) ~[(add now.bowl index-number)] contents)
+  =/  mp  (maybe-post [%.y post])
+  =/  data
+    !>  :-  now.bowl
+        :+  %add-nodes  resource
+        %+  ~(put by *(map index node))
+          ~[(add now.bowl index-number)]
+        [post=mp children=*internal-graph]
+  :*  %pass  /post-to-graph-from-discord  %agent
+      [our:bowl %graph-store]  %poke  %graph-update-3
+      data
+  ==
+++  channel-by-discord-id
+  |=  [discord-id=tape channels=(list channel)]
+  =/  matching
+  %+  skim  channels
+  |=  =channel
+  =(discord-id.channel discord-id)
+  ~&  matching
+  ::  there should always be a match since this runs per channel
+  ?~  matching  !!
+  i.matching
+++  update-latest-seen
+  |=  [=message:faux-discord channels=(list channel)]
+  ^-  (list channel)
+  =/  [these-channels=(list channel) other-channels=(list channel)]
+    %+  skid  channels
+    |=  =channel
+    =(discord-id.channel channel.message)
+  ?~  these-channels  !!
+  =/  this-channel  i.these-channels
+  :-  [resource.this-channel discord-id.this-channel `id.message]
+  other-channels
 --
 %-  agent:dbug
 =|  state-0
@@ -110,6 +148,8 @@
             ?+  -.maybe-post  ~
                 %.y
               =/  post  p.maybe-post
+              ::  ignore our own messages
+              ?:  =(author.post our.bowl)  ~
               =/  matching-channels
                 %+  skim  channels
                 |=  =channel  =(resource:channel resource)
@@ -128,14 +168,30 @@
 ++  on-arvo
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
-  ~&  [wire sign-arvo]
   ?+  wire  (on-arvo:def wire sign-arvo)
+      [%post-to-discord ~]  `this
+      [%faux-huck ~]  `this
       [%faux-timer ~]
     :_  this
     :-  (timer-card now:bowl)
     (fetch-messages-cards bowl channels bot-token)
       [%fetch-discord-messages ~]
-    `this
+    ?.  ?=([%khan %arow %.y %noun *] sign-arvo)
+      (on-arvo:def wire sign-arvo)
+    =/  [%khan %arow %.y %noun result=vase]  sign-arvo
+    =/  messages
+      !<  (list message:faux-discord)  result
+    ?~  messages  `this
+    :_  this(channels (update-latest-seen (rear messages) channels))
+    %+  turn  messages
+    |=  =message:faux-discord
+    =/  resource  resource:(channel-by-discord-id channel.message channels)
+    =/  reply-content
+      ;:(weld author.message ": " content.message)
+    %:  graph-store-message-card  bowl  reply-content  resource
+      ::  TODO improve this
+      (need (find ~[message] messages))
+    ==
   ==
 ++  on-fail   on-fail:def
 --

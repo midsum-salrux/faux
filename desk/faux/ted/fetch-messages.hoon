@@ -38,5 +38,6 @@
   =/  messages  (messages-from-json:faux-discord json-body)
   ?~  messages
     (pure:m !>(~))
+  ::  TODO messages are out of order
   (pure:m !>(messages))
 --
