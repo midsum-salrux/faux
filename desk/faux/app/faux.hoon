@@ -170,13 +170,16 @@
   |=  [=wire =sign-arvo]
   ^-  (quip card _this)
   ?+  wire  (on-arvo:def wire sign-arvo)
-      [%post-to-discord ~]  `this
+      [%post-to-discord ~]
+    ::  ~&  "posted urbit message to discord"
+    `this
       [%faux-huck ~]  `this
       [%faux-timer ~]
     :_  this
     :-  (timer-card now:bowl)
     (fetch-messages-cards bowl channels bot-token)
       [%fetch-discord-messages ~]
+    ::  ~&  "starting fetch message threads"
     ?.  ?=([%khan %arow %.y %noun *] sign-arvo)
       (on-arvo:def wire sign-arvo)
     =/  [%khan %arow %.y %noun result=vase]  sign-arvo
@@ -184,14 +187,13 @@
       !<  (list message:faux-discord)  result
     ?~  messages  `this
     :_  this(channels (update-latest-seen (rear messages) channels))
-    %+  turn  messages
-    |=  =message:faux-discord
+    %+  turn  (numbered-messages:faux-discord messages)
+    |=  [=message:faux-discord index=@ud]
     =/  resource  resource:(channel-by-discord-id channel.message channels)
     =/  reply-content
       ;:(weld author.message ": " content.message)
     %:  graph-store-message-card  bowl  reply-content  resource
-      ::  TODO improve this
-      (need (find ~[message] messages))
+      index
     ==
   ==
 ++  on-fail   on-fail:def

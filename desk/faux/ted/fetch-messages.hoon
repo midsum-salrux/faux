@@ -7,10 +7,10 @@
 =,  strand-fail=strand-fail:libstrand:spider
 |^  ted
 ++  url
-  |=  [channel=tape after=(unit tape)]
+  |=  [discord-channel-id=tape after=(unit tape)]
   ;:  weld
     base-api-url:faux-discord
-    "channels/"  channel  "/messages"
+    "channels/"  discord-channel-id  "/messages"
     ?~  after
       ""
     (weld "?after=" (need after))
@@ -19,11 +19,11 @@
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  [=bowl:gall channel=tape bot-token=tape after=(unit tape) =resource]
+  =/  [=bowl:gall discord-channel-id=tape bot-token=tape after=(unit tape) =resource]
     !<  [bowl:gall tape tape (unit tape) resource]  arg
   =/  =request:http
     :*  %'GET'
-        (crip (url channel after))
+        (crip (url discord-channel-id after))
         (headers:faux-discord bot-token)
         ~
     ==
@@ -35,8 +35,8 @@
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
   =/  messages  (messages-from-json:faux-discord json-body)
+  ::  ~&  (weld "inside fetch thread for channel " discord-channel-id)
   ?~  messages
     (pure:m !>(~))
-  ::  TODO messages are out of order
   (pure:m !>(messages))
 --

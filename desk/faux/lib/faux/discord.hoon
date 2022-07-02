@@ -70,4 +70,12 @@
       (point-text ship.content)
     ==
   (zing segments)
+++  numbered-messages
+  |=  messages=(list message)
+  ^-  (list [message @ud])
+  =/  index  0
+  |-
+  ?~  messages  ~
+  :-  [i.messages index]
+  $(messages t.messages, index +(index))
 --
