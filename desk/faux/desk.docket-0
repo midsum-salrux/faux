@@ -3,7 +3,8 @@
   info+'Discord bridge'
   color+0x65.4321
   version+[0 0 1]
-  website+''
+  website+'https://github.com/midsum-salrux/faux'
   license+'MIT'
-  site+/
+  base+'faux'
+  glob-ames+[~tindys-botter-dozzod-tomdys 0v0]
 ==
