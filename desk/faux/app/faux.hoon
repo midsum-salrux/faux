@@ -120,13 +120,17 @@
   |=  [=mark =vase]
   ^-  (quip card _this)
   ?+  mark  !!
+      %json
+    =/  config-json  !<(json vase)
+    =/  =config:faux-config  (dejs:faux-config config-json)
+    `this(channels channels.config, bot-token bot-token.config)
       %noun
     =/  update  !<(state-update-poke vase)
     ?-  -.update
         %channels
-      `this(channels channels:update)
+      `this(channels channels.update)
         %bot-token
-      `this(bot-token bot-token:update)
+      `this(bot-token bot-token.update)
     ==
       %new-discord-messages
     =/  messages  !<  (list message:faux-discord)  vase

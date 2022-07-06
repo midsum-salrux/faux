@@ -5,13 +5,14 @@ export default function App() {
   window.urbit = new Urbit("");
   window.urbit.ship = window.ship;
   window.urbit.onOpen = function () {
-    this.setState({status: "con"});
+    console.log("urbit open");
   }
   window.urbit.onRetry = function () {
-    this.setState({status: "try"});
+    console.log("urbit retry");
   }
-  window.urbit.onError = function (_err) {
-    this.setState({status: "err"});
+  window.urbit.onError = function (err) {
+    console.log("urbit err");
+    console.log(err);
   }
   return <>
     <h1>{window.urbit.ship}</h1>
@@ -20,6 +21,14 @@ export default function App() {
 }
 
 function Config() {
+  function poke() {
+    window.urbit.poke({
+      app: "faux",
+      mark: "json",
+      json: config,
+      onSuccess: () => null
+    })
+  }
   const [config, setConfig] = useState({botToken: "", channels: []});
 
   useEffect(() => {
@@ -40,5 +49,6 @@ function Config() {
     <p>{config.botToken}</p>
     <h2>Channels</h2>
     <ul>{channels}</ul>
+    <button onClick={poke}>Poke</button>
   </>;
 }

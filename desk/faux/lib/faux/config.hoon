@@ -27,17 +27,22 @@
   ==
 ++  dejs
   |=  =json
+  ^-  config
   (json-decoder json)
 ++  json-decoder
   %-  ot
-  :~  [%'botToken' sa]
-      :-  %channels
+  :~  :-  %channels
       %-  ar
       %-  ot
-      :~  [%'discordChannelId' sa]
-          [%resource dejs:resource]
+      :~  :-  %resource
+              %-  ot
+              :~  ship+(su fed:ag)
+                  name+so
+              ==
+          [%'discordChannelId' sa]
           [%'lastSeenMessage' sa]
       ==
+      [%'botToken' sa]
   ==
 ++  deunitize
   |=  [channels=(list [=resource discord-id=tape last-seen-message=(unit tape)]) bot-token=tape]
