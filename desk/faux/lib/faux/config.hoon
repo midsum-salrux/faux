@@ -1,4 +1,5 @@
 /+  resource
+=,  dejs:format
 |%
 +$  channel
   [=resource discord-id=tape last-seen-message=(unit tape)]
@@ -13,11 +14,29 @@
     |=  =channel
     ^-  json
     %-  pairs:enjs:format
-    :~  ['discordChannelId' [%s (crip discord-id.channel)]]
-        ['resource' (enjs:resource resource.channel)]
-    ==
+    =/  chan
+      :~  ['discordChannelId' [%s (crip discord-id.channel)]]
+          ['resource' (enjs:resource resource.channel)]
+      ==
+    ?~  last-seen-message.channel  chan
+    :-  ['lastSeenMessage' [%s (crip (need last-seen-message.channel))]]
+        chan
   %-  pairs:enjs:format
   :~  ['botToken' q=[%s (crip bot-token.config)]]
       [p='channels' q=json-channels]
+  ==
+++  dejs
+  |=  =json
+  (json-decoder json)
+++  json-decoder
+  %-  ot
+  :~  [%'botToken' sa]
+      :-  %channels
+      %-  ar
+      %-  ou
+      :~  [%'discordChannelId' (un sa)]
+          [%resource (un dejs:resource)]
+          [%'lastSeenMessage' (mu sa)]
+      ==
   ==
 --
