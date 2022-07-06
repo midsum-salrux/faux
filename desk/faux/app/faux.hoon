@@ -10,9 +10,12 @@
 ::  state
 +$  versioned-state
   $%  state-0
+      state-1
   ==
 +$  state-0
-  [%0 [channels=(list channel) bot-token=tape]]
+  [%0 [channels=(list [=resource discord-id=tape last-seen-message=(unit tape)]) bot-token=tape]]
++$  state-1
+  [%1 [channels=(list channel) bot-token=tape]]
 +$  state-update-poke
   $%  [%channels channels=(list channel)]
       [%bot-token bot-token=tape]
@@ -42,7 +45,7 @@
   |=  [=bowl:gall channels=(list channel) bot-token=tape]
   ^-  (list card)
   %+  turn  channels
-    |=  [=resource discord-id=tape last-seen-message=(unit tape)]
+    |=  [=resource discord-id=tape last-seen-message=tape]
     ^-  card
     :*  %pass  /fetch-discord-messages  %arvo  %k  %fard
         %faux  %fetch-messages  %noun
@@ -84,11 +87,11 @@
     =(discord-id.channel channel.message)
   ?~  these-channels  !!
   =/  this-channel  i.these-channels
-  :-  [resource.this-channel discord-id.this-channel `id.message]
+  :-  [resource.this-channel discord-id.this-channel id.message]
   other-channels
 --
 %-  agent:dbug
-=|  state-0
+=|  state-1
 =*  state  -
 ^-  agent:gall
 |_  =bowl:gall
@@ -107,7 +110,12 @@
   |=  old-state=vase
   ^-  (quip card _this)
   =/  old  !<(versioned-state old-state)
-  `this(state old)
+  ?-  -.old
+      %0
+    `this(state [%1 (deunitize:faux-config +.old)])
+      %1
+    `this(state old)
+  ==
 ++  on-poke
   |=  [=mark =vase]
   ^-  (quip card _this)

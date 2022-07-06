@@ -2,7 +2,7 @@
 =,  dejs:format
 |%
 +$  channel
-  [=resource discord-id=tape last-seen-message=(unit tape)]
+  [=resource discord-id=tape last-seen-message=tape]
 +$  config  [channels=(list channel) bot-token=tape]
 ++  enjs
   |=  =config
@@ -33,10 +33,17 @@
   :~  [%'botToken' sa]
       :-  %channels
       %-  ar
-      %-  ou
-      :~  [%'discordChannelId' (un sa)]
-          [%resource (un dejs:resource)]
-          [%'lastSeenMessage' (mu sa)]
+      %-  ot
+      :~  [%'discordChannelId' sa]
+          [%resource dejs:resource]
+          [%'lastSeenMessage' sa]
       ==
   ==
+++  deunitize
+  |=  [channels=(list [=resource discord-id=tape last-seen-message=(unit tape)]) bot-token=tape]
+  ^-  config
+  :_  bot-token
+  %+  turn  channels
+  |=  old-channel=[=resource discord-id=tape last-seen-message=(unit tape)]
+  [resource.old-channel discord-id.old-channel (need last-seen-message.old-channel)]
 --

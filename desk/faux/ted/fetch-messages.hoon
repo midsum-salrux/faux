@@ -7,20 +7,20 @@
 =,  strand-fail=strand-fail:libstrand:spider
 |^  ted
 ++  url
-  |=  [discord-channel-id=tape after=(unit tape)]
+  |=  [discord-channel-id=tape after=tape]
   ;:  weld
     base-api-url:faux-discord
     "channels/"  discord-channel-id  "/messages"
     ?~  after
       ""
-    (weld "?after=" (need after))
+    (weld "?after=" after)
   ==
 ++  ted
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  [=bowl:gall discord-channel-id=tape bot-token=tape after=(unit tape) =resource]
-    !<  [bowl:gall tape tape (unit tape) resource]  arg
+  =/  [=bowl:gall discord-channel-id=tape bot-token=tape after=tape =resource]
+    !<  [bowl:gall tape tape tape resource]  arg
   =/  =request:http
     :*  %'GET'
         (crip (url discord-channel-id after))
