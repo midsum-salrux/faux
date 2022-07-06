@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Urbit from "@urbit/http-api";
 
 export default function App() {
@@ -15,5 +15,31 @@ export default function App() {
   }
   return <>
     <h1>{window.urbit.ship}</h1>
+    <Config />
+  </>;
+}
+
+function Config() {
+  const [config, setConfig] = useState({botToken: "", channels: []});
+
+  useEffect(() => {
+    async function configScry() {
+      const result = await window.urbit.scry({app: "faux", path: "/faux/config"});
+      setConfig(result);
+    }
+
+    configScry();
+  }, []);
+
+
+  let channels = config.channels.map((channel) =>
+    <li>{channel.resource.ship + "/" + channel.resource.name} linked to {channel.discordChannelId}</li>
+  );
+
+  return <>
+    <h2>Bot Token</h2>
+    <p>{config.botToken}</p>
+    <h2>Channels</h2>
+    <ul>{channels}</ul>
   </>;
 }

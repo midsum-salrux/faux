@@ -1,8 +1,7 @@
 /-  *post
 /-  *graph-store
 /+  *graph-store
-/+  default-agent, dbug
-/+  faux-discord
+/+  default-agent, dbug, faux-discord, resource
 |%
 +$  versioned-state
   $%  state-0
@@ -115,13 +114,34 @@
       %noun
     =/  update  !<(state-update-poke vase)
     ?-  -.update
-      %channels   `this(channels channels:update)
-      %bot-token  `this(bot-token bot-token:update)
+        %channels
+      `this(channels channels:update)
+        %bot-token
+      `this(bot-token bot-token:update)
     ==
   ==
 ++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
-++  on-peek   on-peek:def
+++  on-peek
+  |=  [=path]
+  ^-  (unit (unit cage))
+  ?>  ?=([%x %faux %config ~] path)
+  :^  ~  ~  %json
+  !>  ^-  json
+  =/  json-channels=json
+    :-  %a
+    ^-  (list json)
+    %+  turn  channels
+    |=  =channel
+    ^-  json
+    %-  pairs:enjs:format
+    :~  ['discordChannelId' [%s (crip discord-id.channel)]]
+        ['resource' (enjs:resource resource.channel)]
+    ==
+  %-  pairs:enjs:format
+  :~  ['botToken' q=[%s (crip bot-token)]]
+      [p='channels' q=json-channels]
+  ==
 ++  on-agent
   |=  [=wire =sign]
   ^-  (quip card _this)
