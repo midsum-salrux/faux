@@ -10,7 +10,7 @@ export default function App() {
   window.urbit.onRetry = function () {
     this.setState({status: "try"});
   }
-  window.urbit.onError = function (err) {
+  window.urbit.onError = function (_err) {
     this.setState({status: "err"});
   }
   return <>
@@ -31,9 +31,8 @@ function Config() {
     configScry();
   }, []);
 
-
-  let channels = config.channels.map((channel) =>
-    <li>{channel.resource.ship + "/" + channel.resource.name} linked to {channel.discordChannelId}</li>
+  let channels = config.channels.map((channel, i) =>
+    <li key={i}>{channel.resource.ship + "/" + channel.resource.name} linked to {channel.discordChannelId}</li>
   );
 
   return <>
