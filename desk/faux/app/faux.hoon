@@ -79,6 +79,7 @@
   ?~  matching  !!
   i.matching
 ++  update-latest-seen
+  ::  TODO add a check so we never make this an older message
   |=  [=message:faux-discord old-channels=(list channel)]
   ^-  (list channel)
   =/  [these-channels=(list channel) other-channels=(list channel)]

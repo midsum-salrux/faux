@@ -11,9 +11,10 @@
   ;:  weld
     base-api-url:faux-discord
     "channels/"  discord-channel-id  "/messages"
+    "?limit=10"
     ?~  after
       ""
-    (weld "?after=" after)
+    (weld "&after=" after)
   ==
 ++  ted
   ^-  thread:spider
