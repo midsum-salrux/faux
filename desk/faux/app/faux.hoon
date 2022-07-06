@@ -1,22 +1,23 @@
 /-  *post
 /-  *graph-store
 /+  *graph-store
-/+  default-agent, dbug, faux-discord, resource
+/+  default-agent, dbug, faux-discord, resource, faux-config
 |%
+::  aliases
++$  card      card:agent:gall
++$  sign      sign:agent:gall
++$  channel   channel:faux-config
+::  state
 +$  versioned-state
   $%  state-0
   ==
 +$  state-0
-  [%0 [=channels bot-token=tape]]
-+$  channel
-  [=resource discord-id=tape last-seen-message=(unit tape)]
-+$  channels  (list channel)
+  [%0 [channels=(list channel) bot-token=tape]]
 +$  state-update-poke
-  $%  [%channels =channels]
+  $%  [%channels channels=(list channel)]
       [%bot-token bot-token=tape]
   ==
-+$  card  card:agent:gall
-+$  sign  sign:agent:gall
+::
 ++  post-to-discord-card
   |=  [discord-channel-id=tape bot-token=tape =post]
   :*  %pass  /post-to-discord  %arvo  %k  %fard
@@ -38,7 +39,7 @@
 ++  huck-card
   [%pass /faux-huck %arvo %b [%huck *sign-arvo]]
 ++  fetch-messages-cards
-  |=  [=bowl:gall =channels bot-token=tape]
+  |=  [=bowl:gall channels=(list channel) bot-token=tape]
   ^-  (list card)
   %+  turn  channels
     |=  [=resource discord-id=tape last-seen-message=(unit tape)]
@@ -75,10 +76,10 @@
   ?~  matching  !!
   i.matching
 ++  update-latest-seen
-  |=  [=message:faux-discord channels=(list channel)]
+  |=  [=message:faux-discord old-channels=(list channel)]
   ^-  (list channel)
   =/  [these-channels=(list channel) other-channels=(list channel)]
-    %+  skid  channels
+    %+  skid  old-channels
     |=  =channel
     =(discord-id.channel channel.message)
   ?~  these-channels  !!
@@ -127,21 +128,7 @@
   ^-  (unit (unit cage))
   ?>  ?=([%x %faux %config ~] path)
   :^  ~  ~  %json
-  !>  ^-  json
-  =/  json-channels=json
-    :-  %a
-    ^-  (list json)
-    %+  turn  channels
-    |=  =channel
-    ^-  json
-    %-  pairs:enjs:format
-    :~  ['discordChannelId' [%s (crip discord-id.channel)]]
-        ['resource' (enjs:resource resource.channel)]
-    ==
-  %-  pairs:enjs:format
-  :~  ['botToken' q=[%s (crip bot-token)]]
-      [p='channels' q=json-channels]
-  ==
+  !>  (enjs:faux-config [channels bot-token])
 ++  on-agent
   |=  [=wire =sign]
   ^-  (quip card _this)
@@ -191,7 +178,7 @@
   ^-  (quip card _this)
   ?+  wire  (on-arvo:def wire sign-arvo)
       [%post-to-discord ~]
-    ::  ~&  "posted urbit message to discord"
+    ~&  "posted urbit message to discord"
     `this
       [%faux-huck ~]  `this
       [%faux-timer ~]
@@ -199,7 +186,6 @@
     :-  (timer-card now:bowl)
     (fetch-messages-cards bowl channels bot-token)
       [%fetch-discord-messages ~]
-    ::  ~&  "starting fetch message threads"
     ?.  ?=([%khan %arow %.y %noun *] sign-arvo)
       (on-arvo:def wire sign-arvo)
     =/  [%khan %arow %.y %noun result=vase]  sign-arvo

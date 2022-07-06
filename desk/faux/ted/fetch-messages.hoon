@@ -35,8 +35,10 @@
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
   =/  messages  (messages-from-json:faux-discord json-body)
-  ::  ~&  (weld "inside fetch thread for channel " discord-channel-id)
   ?~  messages
     (pure:m !>(~))
+  ~&  (weld "found discord messages for channel " discord-channel-id)
+  ~&  (weld "latest message " content:(rear messages))
+  ~&  messages
   (pure:m !>(messages))
 --
