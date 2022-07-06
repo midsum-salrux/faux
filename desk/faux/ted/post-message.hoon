@@ -36,7 +36,6 @@
   ;<  ~  bind:m  (send-request request)
   ;<  =client-response:iris  bind:m  take-client-response
   ?>  ?=(%finished -.client-response)
-  ~&  (weld "inside post thread for channel " discord-channel-id)
   =/  body
     ?~  full-file.client-response  ''
     q.data.u.full-file.client-response

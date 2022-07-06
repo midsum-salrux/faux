@@ -37,8 +37,9 @@
   =/  messages  (messages-from-json:faux-discord json-body)
   ?~  messages
     (pure:m !>(~))
-  ~&  (weld "found discord messages for channel " discord-channel-id)
-  ~&  (weld "latest message " content:(rear messages))
-  ~&  messages
-  (pure:m !>(messages))
+  ~&  ;:  weld  "found discord messages for channel "  discord-channel-id
+          " latest message "  content:(rear messages)
+      ==
+  ;<  ~  bind:m  (poke [our.bowl %faux] [%new-discord-messages !>(messages)])
+  (pure:m !>(~))
 --
