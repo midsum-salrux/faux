@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { CheckIcon, PlusIcon, TrashIcon } from '@primer/octicons-react'
 
 export default function Config() {
   const [config, setConfig] = useState({botToken: "", channels: []});
@@ -9,7 +10,7 @@ export default function Config() {
 
   async function configScry() {
     const result = await window.urbit.scry({app: "faux", path: "/faux/config"});
-      setConfig(result);
+    setConfig(result);
   }
 
   function configPoke(newConfig) {
@@ -55,7 +56,7 @@ export default function Config() {
     <li key={i}>
       {channel.resource.ship + "/" + channel.resource.name} linked to {channel.discordChannelId}
       <button type="button" className="btn btn-default" onClick={() => removeChannel(i)}>
-        <span className="glyphicon glyphicon-trash"></span>
+        <TrashIcon size={24} />
       </button>
     </li>
   );
@@ -67,7 +68,7 @@ export default function Config() {
            onChange={(e) => setBotToken(e.target.value)}
            placeholder="New Bot Token" />
     <button className="btn btn-default" onClick={pokeBotToken}>
-      <span className="glyphicon glyphicon-ok"></span>
+      <CheckIcon size={24} />
     </button>
     <h2>Channels</h2>
     <ul>{channels}</ul>
@@ -82,7 +83,7 @@ export default function Config() {
            onChange={(e) => setLatestMessage(e.target.value)}
            placeholder="Latest message ID" />
     <button className="btn btn-default" onClick={addChannel}>
-      <span className="glyphicon glyphicon-plus"></span>
+      <PlusIcon size={24} />
     </button>
   </>;
 }
