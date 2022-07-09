@@ -5,13 +5,13 @@ import React, { useState, useEffect } from "react";
 import Token from "./Token"
 import Urbit from "@urbit/http-api";
 
-function componentForPage(page, config, configPoke) {
+function componentForPage(page, setPage, config, configPoke) {
   if (page == BOT_TYPE) {
-    return <BotType config={config} configPoke={configPoke} />;
+    return <BotType setPage={setPage} config={config} configPoke={configPoke} />;
   } else if (page == TOKEN) {
-    return <Token config={config} configPoke={configPoke} />;
+    return <Token setPage={setPage} config={config} configPoke={configPoke} />;
   } else if (page == CHANNELS) {
-    return <Channels config={config} configPoke={configPoke} />;
+    return <Channels setPage={setPage} config={config} configPoke={configPoke} />;
   } else {
     return <p>Something went wrong</p>;
   }
@@ -37,12 +37,11 @@ export default function App() {
 
   useEffect(() => configScry(), []);
 
-
   window.urbit = new Urbit("");
   window.urbit.ship = window.ship;
 
   return <>
     <NavBar page={page} setPage={setPage} />
-    {componentForPage(page, config, configPoke)}
+    {componentForPage(page, setPage, config, configPoke)}
   </>;
 }

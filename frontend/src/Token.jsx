@@ -1,3 +1,4 @@
+import { CHANNELS } from "./NavBar";
 import React, { useState } from "react";
 
 export default function Token(props) {
@@ -5,6 +6,7 @@ export default function Token(props) {
 
   function pokeBotToken() {
     props.configPoke({botToken: botToken, channels: props.config.channels});
+    props.setPage(CHANNELS);
   }
 
   return <div className="container">
