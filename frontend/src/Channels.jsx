@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { TrashIcon } from "@primer/octicons-react";
+import { PlusIcon, TrashIcon } from "@primer/octicons-react";
 
 export default function Channels(props) {
   const [resource, setResource] = useState("");
@@ -72,35 +72,40 @@ export default function Channels(props) {
       {channels}
       <div className="row py-3 text-center">
         <div className="col">
-          <h5 className="py-3">New Connection</h5>
-
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon1">Urbit Channel</span>
-            </div>
-            <input type="text" className="form-control" value={resource}
-                   onChange={(e) => setResource(e.target.value)} />
-            <div className="input-group-append">
-              <button className="btn btn-outline-secondary" type="button">?</button>
-            </div>
-          </div>
-
-          <div className="input-group mb-3">
-            <div className="input-group-prepend">
-              <span className="input-group-text" id="basic-addon1">Discord Channel</span>
-            </div>
-            <input type="text" className="form-control" value={discordChannel}
-                   onChange={(e) => setDiscordChannel(e.target.value)} />
-            <div className="input-group-append">
-              <button className="btn btn-outline-secondary" type="button">?</button>
+          <div className="card">
+            <div className="card-body">
+              <div className="container">
+                <div className="row">
+                  <div className="col">
+                    <h5 className="card-title">Urbit Channel</h5>
+                    <div className="input-group input-group-sm">
+                      <input type="text" className="form-control" value={resource}
+                             onChange={(e) => setResource(e.target.value)} />
+                      <div className="input-group-append">
+                        <button className="btn btn-outline-secondary" type="button">?</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col">
+                    <h5 className="card-title">Discord Channel</h5>
+                    <div className="input-group input-group-sm">
+                      <input type="text" className="form-control" value={discordChannel}
+                             onChange={(e) => setDiscordChannel(e.target.value)} />
+                      <div className="input-group-append">
+                        <button className="btn btn-outline-secondary" type="button">?</button>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col my-auto">
+                    <button type="button" className="btn btn-success" onClick={addChannel}>
+                      <PlusIcon />
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div className="row-sm pt-md-1 text-center">
-        <button type="button" className="btn btn-primary" onClick={addChannel}>
-          Add
-        </button>
       </div>
     </div>
   </>
