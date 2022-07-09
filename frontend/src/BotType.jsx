@@ -3,9 +3,8 @@ import React from "react";
 
 export default function BotType(props) {
   return <>
-    <div className="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-      <h1 className="display-4">Bot Type</h1>
-      <p className="lead">Faux can be used be used with a bot user or as a self-bot.</p>
+    <div className="px-3 py-3 pt-md-1 pb-md-1 mx-auto text-center">
+      <h3>Bot Type</h3>
     </div>
 
     <div className="container">
