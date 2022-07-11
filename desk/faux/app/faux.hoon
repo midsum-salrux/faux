@@ -38,12 +38,6 @@
 ++  timer-card
   |=  now=@da
   [%pass /faux-timer %arvo %b [%wait (add ~s4 now)]]
-::
-::  sometimes behn gets stuck, so we send this no-op card
-::  to unstick it when we see an urbit message
-::
-++  huck-card
-  [%pass /faux-huck %arvo %b [%huck *sign-arvo]]
 ++  fetch-messages-cards
   |=  [=bowl:gall channels=(list channel) bot-token=tape]
   ^-  (list card)
@@ -195,7 +189,6 @@
               `[discord-id.i.matching-channels post]
             ==
           :_  this
-          :-  huck-card
           %+  turn  channel-posts
           |=  [discord-id=tape =post]
           (post-to-discord-card discord-id bot-token post)
@@ -210,7 +203,6 @@
       [%post-to-discord ~]
     ~&  "posted urbit message to discord"
     `this
-      [%faux-huck ~]  `this
       [%faux-timer ~]
     :_  this
     :-  (timer-card now:bowl)
