@@ -11,11 +11,14 @@
 +$  versioned-state
   $%  state-0
       state-1
+      state-2
   ==
 +$  state-0
   [%0 [channels=(list [=resource discord-id=tape last-seen-message=(unit tape)]) bot-token=tape]]
 +$  state-1
-  [%1 [channels=(list channel) bot-token=tape]]
+  [%1 [channels=(list [=resource discord-id=tape last-seen-message=tape]) bot-token=tape]]
++$  state-2
+  [%2 [channels=(list channel) bot-token=tape self-bot=?]]
 +$  state-update-poke
   $%  [%channels channels=(list channel)]
       [%bot-token bot-token=tape]
@@ -45,7 +48,7 @@
   |=  [=bowl:gall channels=(list channel) bot-token=tape]
   ^-  (list card)
   %+  turn  channels
-    |=  [=resource discord-id=tape last-seen-message=tape]
+    |=  [=resource discord-id=tape last-seen-message=tape name=tape]
     ^-  card
     :*  %pass  /fetch-discord-messages  %arvo  %k  %fard
         %faux  %fetch-messages  %noun
@@ -88,11 +91,11 @@
     =(discord-id.channel channel.message)
   ?~  these-channels  !!
   =/  this-channel  i.these-channels
-  :-  [resource.this-channel discord-id.this-channel id.message]
+  :-  [resource.this-channel discord-id.this-channel id.message name.this-channel]
   other-channels
 --
 %-  agent:dbug
-=|  state-1
+=|  state-2
 =*  state  -
 ^-  agent:gall
 |_  =bowl:gall
@@ -113,8 +116,10 @@
   =/  old  !<(versioned-state old-state)
   ?-  -.old
       %0
-    `this(state [%1 (deunitize:faux-config +.old)])
+    `this(state [%2 (add-names-and-selfbot:faux-config (deunitize:faux-config +.old))])
       %1
+    `this(state [%2 (add-names-and-selfbot:faux-config +.old)])
+      %2
     `this(state old)
   ==
 ++  on-poke
@@ -153,7 +158,7 @@
   ^-  (unit (unit cage))
   ?>  ?=([%x %faux %config ~] path)
   :^  ~  ~  %json
-  !>  (enjs:faux-config [channels bot-token])
+  !>  (enjs:faux-config [channels bot-token self-bot])
 ++  on-agent
   |=  [=wire =sign]
   ^-  (quip card _this)
