@@ -76,7 +76,6 @@
   ?~  matching  !!
   i.matching
 ++  update-latest-seen
-  ::  TODO add a check so we never make this an older message
   |=  [=message:faux-discord old-channels=(list channel)]
   ^-  (list channel)
   =/  [these-channels=(list channel) other-channels=(list channel)]
@@ -85,7 +84,11 @@
     =(discord-id.channel channel.message)
   ?~  these-channels  !!
   =/  this-channel  i.these-channels
-  :-  [resource.this-channel discord-id.this-channel id.message name.this-channel]
+  :-  :*  resource.this-channel
+          discord-id.this-channel
+          (later-snowflake:faux-discord id.message last-seen-message.this-channel)
+          name.this-channel
+      ==
   other-channels
 --
 %-  agent:dbug

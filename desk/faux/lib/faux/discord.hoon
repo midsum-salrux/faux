@@ -53,6 +53,12 @@
         author=username.author.m
     ==
   (sort messages message-sorter)
+++  later-snowflake
+  |=  [left=tape right=tape]
+  ^-  tape
+  ?:  (compare-snowflakes left right)
+    left
+  right
 ++  message-sorter
   |=  [left=message right=message]
   ^-  ?
