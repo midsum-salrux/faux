@@ -5,7 +5,7 @@ export default function Token(props) {
   const [botToken, setBotToken] = useState("");
 
   function pokeBotToken() {
-    props.configPoke({botToken: botToken, channels: props.config.channels});
+    props.configPoke({botToken: botToken, selfBot: props.config.selfBot, channels: props.config.channels});
     props.setPage(CHANNELS);
   }
 

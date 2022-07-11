@@ -9,7 +9,9 @@ export default function Channels(props) {
     return function () {
       let newChannels = props.config.channels;
       newChannels.splice(i, 1);
-      props.configPoke({botToken: props.config.botToken, channels: newChannels});
+      props.configPoke({botToken: props.config.botToken,
+                        selfBot: props.config.selfBot,
+                        channels: newChannels});
     }
   }
 
@@ -17,12 +19,11 @@ export default function Channels(props) {
     const [ship, name] =  resource.replace("~", "").split("/");
     const newChannels = props.config.channels
 
-    // TODO make an api call to discord to get the channel name
-    // TODO get the latest message id
     // https://discord.com/developers/docs/resources/channel#channel-object
     newChannels.push({
       discordChannelId: discordChannel,
-      lastSeenMessage: "",
+      lastSeenMessage: "", // TODO
+      name: "", // TODO
       resource: {
         name: name,
         ship: ship
@@ -30,6 +31,7 @@ export default function Channels(props) {
     });
 
     props.configPoke({botToken: props.config.botToken,
+                      selfBot: props.config.selfBot,
                       channels: newChannels});
 
     setResource("");

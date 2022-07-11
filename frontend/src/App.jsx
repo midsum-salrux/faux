@@ -19,7 +19,7 @@ function componentForPage(page, setPage, config, configPoke) {
 
 export default function App() {
   const [page, setPage] = useState(BOT_TYPE);
-  const [config, setConfig] = useState({botToken: "", channels: []});
+  const [config, setConfig] = useState({botToken: "", selfBot: false, channels: []});
 
   async function configScry() {
     const result = await window.urbit.scry({app: "faux", path: "/faux/config"});

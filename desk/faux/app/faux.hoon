@@ -128,7 +128,7 @@
       %json
     =/  config-json  !<(json vase)
     =/  =config:faux-config  (dejs:faux-config config-json)
-    `this(channels channels.config, bot-token bot-token.config)
+    `this(channels channels.config, bot-token bot-token.config, self-bot self-bot.config)
       %noun
     =/  update  !<(state-update-poke vase)
     ?-  -.update
