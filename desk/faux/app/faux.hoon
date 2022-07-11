@@ -23,14 +23,15 @@
   $%  [%channels channels=(list channel)]
       [%bot-token bot-token=tape]
   ==
-::
+::  cards
 ++  post-to-discord-card
-  |=  [discord-channel-id=tape bot-token=tape =post]
+  |=  [discord-channel-id=tape bot-token=tape self-bot=? =post]
   :*  %pass  /post-to-discord  %arvo  %k  %fard
       %faux  %post-message  %noun
       !>  :*
         discord-channel-id
         bot-token
+        self-bot
         (flatten-contents:faux-discord contents.post)
         author.post
       ==
@@ -39,14 +40,14 @@
   |=  now=@da
   [%pass /faux-timer %arvo %b [%wait (add ~s4 now)]]
 ++  fetch-messages-cards
-  |=  [=bowl:gall channels=(list channel) bot-token=tape]
+  |=  [=bowl:gall channels=(list channel) bot-token=tape self-bot=?]
   ^-  (list card)
   %+  turn  channels
     |=  [=resource discord-id=tape last-seen-message=tape name=tape]
     ^-  card
     :*  %pass  /fetch-discord-messages  %arvo  %k  %fard
         %faux  %fetch-messages  %noun
-        !>  [bowl discord-id bot-token last-seen-message resource]
+        !>  [bowl discord-id bot-token self-bot last-seen-message resource]
     ==
 ++  graph-store-message-card
   |=  [=bowl:gall text=tape =resource index-number=@]
@@ -66,6 +67,7 @@
       [our:bowl %graph-push-hook]  %poke  %graph-update-3
       data
   ==
+::
 ++  channel-by-discord-id
   |=  [discord-id=tape channels=(list channel)]
   =/  matching
@@ -194,7 +196,7 @@
           :_  this
           %+  turn  channel-posts
           |=  [discord-id=tape =post]
-          (post-to-discord-card discord-id bot-token post)
+          (post-to-discord-card discord-id bot-token self-bot post)
         ==
       ==
     ==
@@ -209,7 +211,7 @@
       [%faux-timer ~]
     :_  this
     :-  (timer-card now:bowl)
-    (fetch-messages-cards bowl channels bot-token)
+    (fetch-messages-cards bowl channels bot-token self-bot)
       [%fetch-discord-messages ~]
     `this
   ==

@@ -25,12 +25,12 @@
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  [discord-channel-id=tape bot-token=tape message=tape author=@p]
-    !<  [tape tape tape @p]  arg
+  =/  [discord-channel-id=tape bot-token=tape self-bot=? message=tape author=@p]
+    !<  [tape tape ? tape @p]  arg
   =/  =request:http
     :*  %'POST'
         (crip (url discord-channel-id))
-        (headers:faux-discord bot-token)
+        (headers:faux-discord bot-token self-bot)
         `(json-to-octs:server (body message author))
     ==
   ;<  ~  bind:m  (send-request request)

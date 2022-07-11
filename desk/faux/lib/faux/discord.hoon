@@ -9,7 +9,7 @@
 ++  user-agent  'Faux (https://github.com/midsum-salrux/faux, 0.1)'
 ++  self-user-agent
   'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/1.0.9004 Chrome/91.0.4472.164 Electron/13.6.6 Safari/537.36'
-++  headers
+++  bot-user-headers
   |=  bot-token=tape
   :~  [key='Authorization' value=(crip (weld "Bot " bot-token))]
       [key='User-Agent' value=user-agent]
@@ -19,7 +19,7 @@
   |=  bot-token=tape
   :~  [key='Authorization' value=(crip bot-token)]
       [key='Referer' value='https://discord.com/channels/@me']
-      [key='User-Agent' value=user-agent]
+      [key='User-Agent' value=self-user-agent]
       [key='Content-Type' value='application/json']
 [key='Sec-Ch-Ua' value='"Not A;Brand";v="99", "Chromium";v="100", "Google Chrome";v="100']
       [key='Sec-Ch-Ua-Mobile' value='?0']
@@ -30,6 +30,11 @@
       [key='Cache-Control' value='no-cache']
       [key='Connection' value='no-cache']
   ==
+++  headers
+  |=  [bot-token=tape self-bot=?]
+  ?:  self-bot
+    (self-headers bot-token)
+  (bot-user-headers bot-token)
 ++  messages-json-decoder
   %-  ar
   %-  ot
@@ -57,8 +62,8 @@
   |=  [left=tape right=tape]
   ^-  tape
   ?:  (compare-snowflakes left right)
-    left
-  right
+    right
+  left
 ++  message-sorter
   |=  [left=message right=message]
   ^-  ?

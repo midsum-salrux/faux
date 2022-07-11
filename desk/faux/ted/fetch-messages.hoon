@@ -20,12 +20,12 @@
   ^-  thread:spider
   |=  arg=vase
   =/  m  (strand ,vase)
-  =/  [=bowl:gall discord-channel-id=tape bot-token=tape after=tape =resource]
-    !<  [bowl:gall tape tape tape resource]  arg
+  =/  [=bowl:gall discord-channel-id=tape bot-token=tape self-bot=? after=tape =resource]
+    !<  [bowl:gall tape tape ? tape resource]  arg
   =/  =request:http
     :*  %'GET'
         (crip (url discord-channel-id after))
-        (headers:faux-discord bot-token)
+        (headers:faux-discord bot-token self-bot)
         ~
     ==
   ;<  ~  bind:m  (send-request request)
