@@ -125,9 +125,8 @@
   |=  [=mark =vase]
   ^-  (quip card _this)
   ?+  mark  !!
-      %json
-    =/  config-json  !<(json vase)
-    =/  =config:faux-config  (dejs:faux-config config-json)
+      %faux-set-config
+    =/  config  !<(config:faux-config vase)
     `this(channels channels.config, bot-token bot-token.config, self-bot self-bot.config)
       %noun
     =/  update  !<(state-update-poke vase)
@@ -155,7 +154,7 @@
 ++  on-peek
   |=  [=path]
   ^-  (unit (unit cage))
-  ?>  ?=([%x %faux %config ~] path)
+  ?>  ?=([%x %config ~] path)
   :^  ~  ~  %json
   !>  (enjs:faux-config [channels bot-token self-bot])
 ++  on-agent

@@ -22,14 +22,14 @@ export default function App() {
   const [config, setConfig] = useState({botToken: "", selfBot: false, channels: []});
 
   async function configScry() {
-    const result = await window.urbit.scry({app: "faux", path: "/faux/config"});
+    const result = await window.urbit.scry({app: "faux", path: "/config"});
     setConfig(result);
   }
 
   function configPoke(newConfig) {
     window.urbit.poke({
       app: "faux",
-      mark: "json",
+      mark: "faux-set-config",
       json: newConfig,
       onSuccess: () => configScry()
     });
