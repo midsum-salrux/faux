@@ -1,7 +1,8 @@
 /-  *post
 /-  *graph-store
 /+  *graph-store
-/+  default-agent, dbug, faux-discord, resource, faux-config
+/+  default-agent, dbug, resource
+/+  faux-discord, faux-config, faux-add-channel
 |%
 ::  aliases
 +$  card      card:agent:gall
@@ -19,11 +20,22 @@
   [%1 [channels=(list [=resource discord-id=tape last-seen-message=tape]) bot-token=tape]]
 +$  state-2
   [%2 [channels=(list channel) bot-token=tape self-bot=?]]
-+$  state-update-poke
-  $%  [%channels channels=(list channel)]
-      [%bot-token bot-token=tape]
-  ==
 ::  cards
+++  timer-card
+  |=  now=@da
+  [%pass /faux-timer %arvo %b [%wait (add ~s4 now)]]
+++  add-channel-card
+  |=  [=bowl:gall =new-channel:faux-add-channel bot-token=tape self-bot=?]
+  :*  %pass  /add-channel  %arvo  %k  %fard
+      %faux  %add-channel  %noun
+      !>  :*
+        bowl
+        resource.new-channel
+        discord-id.new-channel
+        bot-token
+        self-bot
+      ==
+  ==
 ++  post-to-discord-card
   |=  [discord-channel-id=tape bot-token=tape self-bot=? =post]
   :*  %pass  /post-to-discord  %arvo  %k  %fard
@@ -36,9 +48,6 @@
         author.post
       ==
   ==
-++  timer-card
-  |=  now=@da
-  [%pass /faux-timer %arvo %b [%wait (add ~s4 now)]]
 ++  fetch-messages-cards
   |=  [=bowl:gall channels=(list channel) bot-token=tape self-bot=?]
   ^-  (list card)
@@ -125,17 +134,18 @@
   |=  [=mark =vase]
   ^-  (quip card _this)
   ?+  mark  !!
+      ::  frontend pokes
       %faux-set-config
     =/  config  !<(config:faux-config vase)
     `this(channels channels.config, bot-token bot-token.config, self-bot self-bot.config)
-      %noun
-    =/  update  !<(state-update-poke vase)
-    ?-  -.update
-        %channels
-      `this(channels channels.update)
-        %bot-token
-      `this(bot-token bot-token.update)
-    ==
+      %faux-add-channel
+    =/  new-channel  !<(new-channel:faux-add-channel vase)
+    :_  this
+    ~[(add-channel-card bowl new-channel bot-token self-bot)]
+      ::  thread pokes
+      %new-channel
+    =/  =channel  !<(channel:faux-config vase)
+    `this(channels (weld channels ~[channel]))
       %new-discord-messages
     =/  messages  !<  (list message:faux-discord)  vase
     ?~  messages  `this
@@ -206,6 +216,8 @@
   ?+  wire  (on-arvo:def wire sign-arvo)
       [%post-to-discord ~]
     ~&  "posted urbit message to discord"
+    `this
+      [%add-channel ~]
     `this
       [%faux-timer ~]
     :_  this

@@ -1,4 +1,6 @@
 /-  *post
+/+  resource
+/+  faux-config
 =,  dejs:format
 |%
 +$  parsed-message
@@ -58,6 +60,22 @@
         author=username.author.m
     ==
   (sort messages message-sorter)
+++  channel-info-decoder
+  %-  ot
+  :~  id+sa
+      [%'last_message_id' (mu sa)]
+      name+sa
+  ==
+++  channel-from-json
+  |=  [=json =resource]
+  ^-  channel:faux-config
+  =/  decoded=[id=tape last-message-id=(unit tape) name=tape]
+    (channel-info-decoder json)
+  :*  resource
+      id.decoded
+      (fall last-message-id.decoded "")
+      name.decoded
+  ==
 ++  later-snowflake
   |=  [left=tape right=tape]
   ^-  tape

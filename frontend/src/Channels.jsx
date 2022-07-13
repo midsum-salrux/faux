@@ -5,34 +5,28 @@ export default function Channels(props) {
   const [resource, setResource] = useState("");
   const [discordChannel, setDiscordChannel] = useState("");
 
-  function channelRemover(i) {
+  function channelRemover(discordChannelId) {
     return function () {
-      let newChannels = props.config.channels;
-      newChannels.splice(i, 1);
-      props.configPoke({botToken: props.config.botToken,
-                        selfBot: props.config.selfBot,
-                        channels: newChannels});
+      props.configPoke({
+        botToken: props.config.botToken,
+        selfBot: props.config.selfBot,
+        channels: props.config.channels.filter(
+          channel => channel.discordChannelId != discordChannelId
+        )
+      });
     }
   }
 
   function addChannel() {
     const [ship, name] =  resource.replace("~", "").split("/");
-    const newChannels = props.config.channels
 
-    // https://discord.com/developers/docs/resources/channel#channel-object
-    newChannels.push({
-      discordChannelId: discordChannel,
-      lastSeenMessage: "", // TODO
-      name: "", // TODO
+    props.addChannelPoke({
       resource: {
         name: name,
         ship: ship
-      }
+      },
+      discordChannelId: discordChannel
     });
-
-    props.configPoke({botToken: props.config.botToken,
-                      selfBot: props.config.selfBot,
-                      channels: newChannels});
 
     setResource("");
     setDiscordChannel("");
@@ -52,10 +46,11 @@ export default function Channels(props) {
                 </div>
                 <div className="col">
                   <h5 className="card-title">Discord Channel</h5>
+                  <h6 className="card-subtitle mb-2 text-muted">{channel.name}</h6>
                   <h6 className="card-subtitle mb-2 text-muted">{channel.discordChannelId}</h6>
                 </div>
                 <div className="col my-auto">
-                  <button type="button" className="btn btn-danger" onClick={channelRemover(i)}>
+                  <button type="button" className="btn btn-danger" onClick={channelRemover(channel.discordChannelId)}>
                     <TrashIcon />
                   </button>
                 </div>
