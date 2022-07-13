@@ -59,19 +59,21 @@
         !>  [bowl discord-id bot-token self-bot last-seen-message resource]
     ==
 ++  graph-store-message-card
-  |=  [=bowl:gall text=tape =resource index-number=@]
+  |=  [=bowl:gall text=tape =resource snowflake=@ index-number=@]
   =/  contents=(list content)  ~[[%text (crip text)]]
   =/  =post
     %+  ~(post create our.bowl now.bowl)
-      ~[(add now.bowl index-number)]
+      ~[snowflake]
     contents
   =/  mp  (maybe-post [%.y post])
+  =/  nodes
+    %+  ~(put by *(map index node))
+      ~[snowflake]
+    [post=mp children=*internal-graph]
   =/  data
     !>  :-  now.bowl
         :+  %add-nodes  resource
-        %+  ~(put by *(map index node))
-          ~[(add now.bowl index-number)]
-        [post=mp children=*internal-graph]
+        nodes
   :*  %pass  /post-to-graph-from-discord  %agent
       [our:bowl %graph-push-hook]  %poke  %graph-update-3
       data
@@ -153,11 +155,17 @@
     %+  turn  (numbered-messages:faux-discord messages)
     |=  [=message:faux-discord index=@ud]
     =/  resource  resource:(channel-by-discord-id channel.message channels)
+    =/  author  ;:(weld "**" author.message "**")
     =/  reply-content
-      ;:(weld author.message ": " content.message)
-    %:  graph-store-message-card  bowl  reply-content  resource
+      ;:(weld author ": " content.message)
+    %:  graph-store-message-card  bowl  reply-content  resource  (crip id.message)
       index
     ==
+      %retry-after
+    =/  retry  !<  @dr  vase
+    ~&  >>>  %rate-limited  `this
+      %start-timer
+    :_  this  ~[(timer-card now:bowl)]
   ==
 ++  on-watch  on-watch:def
 ++  on-leave  on-leave:def
