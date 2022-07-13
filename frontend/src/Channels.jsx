@@ -1,3 +1,4 @@
+import fetchDiscordChannel from "./fetchDiscordChannel"
 import React, { useState } from "react";
 import { PlusIcon, TrashIcon } from "@primer/octicons-react";
 
@@ -18,6 +19,9 @@ export default function Channels(props) {
   function addChannel() {
     const [ship, name] =  resource.replace("~", "").split("/");
     const newChannels = props.config.channels
+
+    const channelResponse = fetchDiscordChannel(discordChannel, props.config.botToken, props.config.selfBot);
+    console.log(channelResponse);
 
     // https://discord.com/developers/docs/resources/channel#channel-object
     newChannels.push({

@@ -61,6 +61,8 @@
 ++  later-snowflake
   |=  [left=tape right=tape]
   ^-  tape
+  ?~  left  right
+  ?~  right  left
   ?:  (compare-snowflakes left right)
     right
   left

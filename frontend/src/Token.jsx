@@ -9,6 +9,7 @@ export default function Token(props) {
     props.setPage(CHANNELS);
   }
 
+  // TODO add info about how to get this for bot users and one for self bots
   return <>
     <div className="px-3 py-3 pt-md-1 pb-md-1 mx-auto text-center">
       <h3>Token</h3>
