@@ -1,4 +1,5 @@
 import { CHANNELS } from "./NavBar";
+import TokenTutorial from "./TokenTutorial";
 import React, { useState } from "react";
 
 export default function Token(props) {
@@ -25,6 +26,11 @@ export default function Token(props) {
               <button className="btn btn-primary" onClick={pokeBotToken}>Continue</button>
             </div>
           </div>
+        </div>
+      </div>
+      <div className="row">
+        <div className="px-3 py-3 pt-md-1 pb-md-4 mx-auto text-center">
+          <TokenTutorial selfBot={props.config.selfBot} />
         </div>
       </div>
     </div>
