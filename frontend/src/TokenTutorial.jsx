@@ -19,13 +19,13 @@ function SelfBotTutorial() {
 
 function BotUserTutorial() {
   return <>
-    <img src="/apps/faux/img/new-application.png" width="60%" />
+    <img src="/apps/faux/img/new-application.png" width="80%" />
     <p>Visit <a href="https://discord.com/developers/applications">the discord developers page</a> and create a new application. Name it whatever you like</p><br/>
-    <img src="/apps/faux/img/create-bot.png" width="60%" />
+    <img src="/apps/faux/img/create-bot.png" width="80%" />
     <p>Go to the Bot tab and add a bot</p><br/>
-    <img src="/apps/faux/img/bot-token.png" width="60%" />
+    <img src="/apps/faux/img/bot-token.png" width="80%" />
     <p>Reset the token, copy it and save it. This is the token you&apos;ll paste in the field above.</p><br/>
-    <img src="/apps/faux/img/bot-link.png" width="60%" />
-    <p>Create an invite url and save it. This is how you&apos;ll invite your bot to the groups you want to bridge</p><br/>
+    <img src="/apps/faux/img/bot-link.png" width="80%" />
+    <p>Create an invite url with these permissions and save it. This is how you&apos;ll invite your bot to the groups you want to bridge</p><br/>
   </>;
 }
