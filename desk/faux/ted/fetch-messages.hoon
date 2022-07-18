@@ -48,7 +48,7 @@
   =/  raw-body
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
-  =/  messages  (mule |.((messages-from-json:faux-discord json-body)))
+  =/  messages  (mule |.((messages-from-json:faux-discord self-bot json-body)))
   =/  [ok=? =tang res=(list message:faux-discord)]
     ?-  -.messages
       %|  :-  |  :_  ~  (welp p.messages leaf+"retry" ~)

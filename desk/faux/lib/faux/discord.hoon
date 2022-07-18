@@ -46,12 +46,14 @@
       author+(ou ~[username+(uf "" sa) bot+(uf %.n bo)])
   ==
 ++  messages-from-json
-  |=  =json
+  |=  [self-bot=? =json]
   ^-  (list message)
   =/  decoded  (messages-json-decoder json)
   =/  messages=(list message)
     %+  turn
-      (skip decoded |=(m=parsed-message bot.author.m))
+      ::  skip bot messages in order to skip faux messages
+      ::  unless we're selfbotting
+      (skip decoded |=(m=parsed-message &(bot.author.m !self-bot)))
     |=  m=parsed-message
     ^-  message
     :*  id=id.m
