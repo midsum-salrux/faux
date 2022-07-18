@@ -2,7 +2,7 @@
   title+'Faux'
   info+'Discord bridge'
   color+0x65.4321
-  version+[0 0 1]
+  version+[1 0 0]
   website+'https://github.com/midsum-salrux/faux'
   license+'MIT'
   base+'faux'
