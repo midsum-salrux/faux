@@ -59,8 +59,13 @@
         !>  [bowl discord-id bot-token self-bot last-seen-message resource]
     ==
 ++  graph-store-message-card
-  |=  [=bowl:gall text=tape =resource snowflake=@ index-number=@]
-  =/  contents=(list content)  ~[[%text (crip text)]]
+  |=  [=bowl:gall text=tape attachments=(list attachment:faux-discord) =resource snowflake=@]
+  =/  attached-urls=(list content)
+    (turn attachments |=(=attachment:faux-discord [%url (crip url.attachment)]))
+  =/  message-text=(list content)
+    ~[[%text (crip text)]]
+  =/  contents
+    (weld message-text attached-urls)
   =/  =post
     %+  ~(post create our.bowl now.bowl)
       ~[snowflake]
@@ -152,14 +157,15 @@
     =/  messages  !<  (list message:faux-discord)  vase
     ?~  messages  `this
     :_  this(channels (update-latest-seen (rear messages) channels))
-    %+  turn  (numbered-messages:faux-discord messages)
-    |=  [=message:faux-discord index=@ud]
+    %+  turn  messages
+    |=  [=message:faux-discord]
     =/  resource  resource:(channel-by-discord-id channel.message channels)
     =/  author  ;:(weld "**" author.message "**")
     =/  reply-content
       ;:(weld author ": " content.message)
-    %:  graph-store-message-card  bowl  reply-content  resource  (crip id.message)
-      index
+    %:  graph-store-message-card  bowl
+      reply-content  attachments.message
+      resource  (crip id.message)
     ==
       %retry-after
     =/  retry  !<  @dr  vase

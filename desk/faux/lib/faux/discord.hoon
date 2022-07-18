@@ -4,10 +4,11 @@
 =,  dejs:format
 |%
 +$  mention  [id=tape username=tape]
++$  attachment  [url=tape]
 +$  parsed-message
-  [id=tape content=tape channel-id=tape author=[username=tape bot=?] mentions=(list mention)]
+  [id=tape content=tape channel-id=tape author=[username=tape bot=?] mentions=(list mention) attachments=(list attachment)]
 +$  message
-  [id=tape content=tape channel=tape author=tape]
+  [id=tape content=tape channel=tape author=tape attachments=(list attachment)]
 ++  base-api-url  "https://discord.com/api/v9/"
 ++  user-agent  'Faux (https://github.com/midsum-salrux/faux, 0.1)'
 ++  self-user-agent
@@ -51,6 +52,10 @@
           :~  id+sa
               username+sa
           ==
+      :-  %attachments
+          %-  ar
+          %-  ot
+          ~[url+sa]
   ==
 ++  messages-from-json
   |=  [self-bot=? =json]
@@ -67,11 +72,13 @@
         content=(replace-mentions content.m mentions.m)
         channel=channel-id.m
         author=username.author.m
+        attachments=attachments.m
     ==
   (sort messages message-sorter)
 ++  replace-mentions
   |=  [content=tape mentions=(list mention)]
   ^-  tape
+  ?~  content  content
   (zing (scan content (plus (message-parser mentions))))
 ++  mention-parser
   |=  mentions=(list mention)
@@ -145,12 +152,4 @@
       (point-text ship.content)
     ==
   (zing segments)
-++  numbered-messages
-  |=  messages=(list message)
-  ^-  (list [message @ud])
-  =/  index  0
-  |-
-  ?~  messages  ~
-  :-  [i.messages index]
-  $(messages t.messages, index +(index))
 --
