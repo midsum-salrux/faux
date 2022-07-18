@@ -3,8 +3,9 @@
 /+  faux-config
 =,  dejs:format
 |%
++$  mention  [id=tape username=tape]
 +$  parsed-message
-  [id=tape content=tape channel-id=tape author=[username=tape bot=?]]
+  [id=tape content=tape channel-id=tape author=[username=tape bot=?] mentions=(list mention)]
 +$  message
   [id=tape content=tape channel=tape author=tape]
 ++  base-api-url  "https://discord.com/api/v9/"
@@ -44,6 +45,12 @@
       content+sa
       [%'channel_id' sa]
       author+(ou ~[username+(uf "" sa) bot+(uf %.n bo)])
+      :-  %mentions
+          %-  ar
+          %-  ot
+          :~  id+sa
+              username+sa
+          ==
   ==
 ++  messages-from-json
   |=  [self-bot=? =json]
@@ -57,11 +64,29 @@
     |=  m=parsed-message
     ^-  message
     :*  id=id.m
-        content=content.m
+        content=(replace-mentions content.m mentions.m)
         channel=channel-id.m
         author=username.author.m
     ==
   (sort messages message-sorter)
+++  replace-mentions
+  |=  [content=tape mentions=(list mention)]
+  ^-  tape
+  (zing (scan content (plus (message-parser mentions))))
+++  mention-parser
+  |=  mentions=(list mention)
+  =/  replacer
+    |=  id=tape
+    =/  match  (skim mentions |=(=mention =(id id.mention)))
+    ?~  match  "@[unknown user]"  (weld "@" username.i.match)
+  ::  <@65432745377> to username
+  (cook replacer (ifix [(jest '<@') gar] (plus (shim '0' '9'))))
+++  message-parser
+  |=  mentions=(list mention)
+  ;~  pose
+      (mention-parser mentions)
+      (cook trip next)
+  ==
 ++  channel-info-decoder
   %-  ot
   :~  id+sa
