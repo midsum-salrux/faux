@@ -130,6 +130,12 @@
   |-
   ?~  left   %.n
   ?~  right  %.y
+  =/  left-lent  (lent left)
+  =/  right-lent  (lent right)
+  ?:  (gth left-lent right-lent)
+    %.n
+  ?:  (gth right-lent left-lent)
+    %.y
   ?.  =(i.left i.right)
     (lth i.left i.right)
   $(left t.left, right t.right)
