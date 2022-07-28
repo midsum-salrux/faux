@@ -8,7 +8,7 @@
 +$  parsed-message
   [id=tape content=tape channel-id=tape author=[username=tape bot=?] mentions=(list mention) attachments=(list attachment)]
 +$  message
-  [id=tape content=tape channel=tape author=tape attachments=(list attachment)]
+  [id=tape content=tape channel=tape author=tape attachments=(list attachment) bot-message=?]
 ++  base-api-url  "https://discord.com/api/v9/"
 ++  user-agent  'Faux (https://github.com/midsum-salrux/faux, 0.1)'
 ++  self-user-agent
@@ -61,11 +61,8 @@
   |=  [self-bot=? =json]
   ^-  (list message)
   =/  decoded  (messages-json-decoder json)
-  =/  messages=(list message)
-    %+  turn
-      ::  skip bot messages in order to skip faux messages
-      ::  unless we're selfbotting
-      (skip decoded |=(m=parsed-message &(bot.author.m !self-bot)))
+  =/  messages
+    %+  turn  decoded
     |=  m=parsed-message
     ^-  message
     :*  id=id.m
@@ -73,6 +70,7 @@
         channel=channel-id.m
         author=username.author.m
         attachments=attachments.m
+        bot-message=bot.author.m
     ==
   (sort messages message-sorter)
 ++  replace-mentions

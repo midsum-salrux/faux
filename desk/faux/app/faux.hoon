@@ -157,8 +157,12 @@
     =/  messages  !<  (list message:faux-discord)  vase
     ?~  messages  `this
     :_  this(channels (update-latest-seen (rear messages) channels))
-    %+  turn  messages
-    |=  [=message:faux-discord]
+    =/  postable-messages
+      %+  skip  `(list message:faux-discord)`messages
+      |=  =message:faux-discord
+      &(bot-message.message !self-bot)
+    %+  turn  postable-messages
+    |=  =message:faux-discord
     =/  resource  resource:(channel-by-discord-id channel.message channels)
     =/  author  ;:(weld "**" author.message "**")
     =/  reply-content
