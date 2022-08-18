@@ -6,9 +6,9 @@
 +$  mention  [id=tape username=tape]
 +$  attachment  [url=tape]
 +$  parsed-message
-  [id=tape content=tape channel-id=tape author=[username=tape bot=?] mentions=(list mention) attachments=(list attachment)]
+  [id=tape content=tape channel-id=tape author=[id=tape username=tape bot=?] mentions=(list mention) attachments=(list attachment)]
 +$  message
-  [id=tape content=tape channel=tape author=tape attachments=(list attachment) bot-message=?]
+  [id=tape content=tape channel=tape author=tape author-id=tape attachments=(list attachment) bot-message=?]
 ++  base-api-url  "https://discord.com/api/v9/"
 ++  user-agent  'Faux (https://github.com/midsum-salrux/faux, 0.1)'
 ++  self-user-agent
@@ -39,13 +39,14 @@
   ?:  self-bot
     (self-headers bot-token)
   (bot-user-headers bot-token)
+++  user-id-from-json  (ot ~[id+sa])
 ++  messages-json-decoder
   %-  ar
   %-  ot
   :~  id+sa
       content+sa
       [%'channel_id' sa]
-      author+(ou ~[username+(uf "" sa) bot+(uf %.n bo)])
+      author+(ou ~[id+(un sa) username+(uf "" sa) bot+(uf %.n bo)])
       :-  %mentions
           %-  ar
           %-  ot
@@ -58,7 +59,7 @@
           ~[url+sa]
   ==
 ++  messages-from-json
-  |=  [self-bot=? =json]
+  |=  [bot-user-id=tape =json]
   ^-  (list message)
   =/  decoded  (messages-json-decoder json)
   =/  messages
@@ -69,10 +70,14 @@
         content=(replace-mentions content.m mentions.m)
         channel=channel-id.m
         author=username.author.m
+        author-id=id.author.m
         attachments=attachments.m
         bot-message=bot.author.m
     ==
-  (sort messages message-sorter)
+  =/  sorted  (sort messages message-sorter)
+  %+  skip  sorted
+  |=  m=message
+  =(author-id.m bot-user-id)
 ++  replace-mentions
   |=  [content=tape mentions=(list mention)]
   ^-  tape
@@ -154,6 +159,8 @@
       (trip url.content)
         %mention
       (point-text ship.content)
+        %code
+      ;:(weld "`" (trip expression.content) "`")
     ==
   (zing segments)
 --
