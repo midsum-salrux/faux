@@ -16,6 +16,7 @@
       ""
     (weld "&after=" after)
   ==
+++  user-url  (weld base-api-url:faux-discord "users/@me")
 ++  boom
   |=  msgs=(list message:faux-discord)
   =/  m  (strand ,vase)
@@ -34,6 +35,23 @@
   =/  m  (strand ,vase)
   =/  [=bowl:gall discord-channel-id=tape bot-token=tape self-bot=? after=tape =resource]
     !<  [bowl:gall tape tape ? tape resource]  arg
+  ::  get current user id
+  =/  user-request=request:http
+    :*  %'GET'
+        (crip user-url)
+        (headers:faux-discord bot-token self-bot)
+        ~
+    ==
+  ;<  ~  bind:m  (send-request user-request)
+  ;<  user-response=client-response:iris  bind:m  take-client-response
+  ?.  ?=(%finished -.user-response)
+    !!
+  ?~  full-file.user-response  !!
+  =/  user-raw-body
+    q.data.u.full-file.user-response
+  =/  user-json-body  (need (de-json:html user-raw-body))
+  =/  bot-user-id  (user-id-from-json:faux-discord user-json-body)
+  ::  get messages
   =/  =request:http
     :*  %'GET'
         (crip (url discord-channel-id after))
@@ -48,7 +66,7 @@
   =/  raw-body
     q.data.u.full-file.client-response
   =/  json-body  (need (de-json:html raw-body))
-  =/  messages  (mule |.((messages-from-json:faux-discord self-bot json-body)))
+  =/  messages  (mule |.((messages-from-json:faux-discord bot-user-id json-body)))
   =/  [ok=? =tang res=(list message:faux-discord)]
     ?-  -.messages
       %|  :-  |  :_  ~  (welp p.messages leaf+"retry" ~)
