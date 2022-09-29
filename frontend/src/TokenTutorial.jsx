@@ -27,5 +27,7 @@ function BotUserTutorial() {
     <p>Reset the token, copy it and save it. This is the token you&apos;ll paste in the field above.</p><br/>
     <img src="/apps/faux/img/bot-link.png" width="80%" />
     <p>Create an invite url with these permissions and save it. This is how you&apos;ll invite your bot to the groups you want to bridge</p><br/>
+    <img src="/apps/faux/img/message-content-intent.png" width="80%" />
+    <p>Enable the &quot;message content&quot; privileged intent for your bot</p><br/>
   </>;
 }
